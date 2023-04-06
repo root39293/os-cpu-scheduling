@@ -19,10 +19,17 @@ This project aims to implement CPU scheduling with JavaScript.
 
 # Implementation
 
-In this project, we implement several CPU scheduling algorithms, including First-Come, First-Served (FCFS), Round Robin (RR), and Priority-based scheduling. We use JavaScript to write the implementation and Node.js to run the code. Here is an example of how the Round Robin algorithm is implemented:
+In this project, we will implement several CPU scheduling techniques and analyze the test results. We will utilize Node.js within JavaScript to implement the program and analyze the results.
+
+The scheduling algorithms I have chosen are
+
+1. FCFS (First-Come First-Served)
+2. Shortest Job first (SJF)
+3. Round-Robin
+4. . . .
 
 ```javascript
-function SJF(processes, quantum) {
+function FCFS(parameter1, parameter2) {
   // implementation code here
 }
 ```

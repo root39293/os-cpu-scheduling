@@ -2,9 +2,9 @@
 
 ## Table of Contents
 
-- [Outline][#outline]
-- [Development envinorment][#development-envinorment]
-- [Implement][#implement]
+- [Outline](#Outline)
+- [Development envinorment](#Development-envinorment)
+- [Implement](#Implement)
 
 # Outline
 Implementing CPU scheduling with JavaScript

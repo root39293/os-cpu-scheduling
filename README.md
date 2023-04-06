@@ -1,2 +1,2 @@
 # os-cpu-scheduling
-implement CPU scheduling algorithm using Javascript
+- implement CPU scheduling algorithm using Javascript

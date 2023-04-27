@@ -1,5 +1,5 @@
 import sys
-
+import matplotlib.pyplot as plt
 
 class Process:
     def __init__(self, name, arrivalTime, burstTime):
@@ -28,6 +28,27 @@ class Queue:
 
     def isEmpty(self):
         return len(self.items) == 0
+
+
+def Draw_gantt_chart(processes):
+    fig, gnt = plt.subplots()
+
+    gnt.set_xlabel('Time')
+    gnt.set_ylabel('Processes')
+
+    gnt.set_xlim(0, processes[-1].completionTime)
+    gnt.set_xticks([i for i in range(processes[-1].completionTime + 1)]) 
+    gnt.set_ylim(0, len(processes)+1)
+    gnt.set_yticks([i+0.5 for i in range(len(processes))])
+    gnt.set_yticklabels([processes[i].name for i in range(len(processes))])
+
+    for i in range(len(processes)):
+        process = processes[i]
+        gnt.broken_barh([(process.startTime, process.burstTime)], (i+0.1, 0.8))
+
+    plt.show()
+
+
 
 
 def FCFS(processes):
@@ -77,8 +98,12 @@ def main():
     for process in executedProcesses:
         print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}".format(process.name, process.arrivalTime, process.burstTime, process.startTime, process.completionTime))
     print(f"Average Waiting Time: {averageWaitingTime}")
+    Draw_gantt_chart(executedProcesses)
 
 
 if __name__ == "__main__":
     main()
     input("Press Enter key to exit...")
+
+
+

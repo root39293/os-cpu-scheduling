@@ -23,11 +23,8 @@ In this project, we will implement several CPU scheduling techniques and analyze
 
 The scheduling algorithms I have chosen are
 
-1. FCFS (First-Come First-Served)
-2. Shortest Job first (Non-preemptive)
-3. Round-Robin
-4. Priority Scheduling
 
+## 1. FCFS (First-Come First-Served)
 ```python
 def FCFS(processes):
     readyQueue = Queue()
@@ -45,6 +42,7 @@ def FCFS(processes):
         process.startTime = currentTime
         currentTime += process.burstTime
         process.completionTime = currentTime
+        process.waitTime = process.startTime - process.arrivalTime
 
     executedProcesses = []
     while not executionQueue.isEmpty():
@@ -52,6 +50,7 @@ def FCFS(processes):
 
     return executedProcesses
 ``` 
+## 2. Shortest Job first (Non-preemptive)
 
 ```python
 def SJF(processes):
@@ -71,6 +70,7 @@ def SJF(processes):
         process.startTime = currentTime
         currentTime += process.burstTime
         process.completionTime = currentTime
+        process.waitTime = process.startTime - process.arrivalTime
 
     executedProcesses = []
     while not executionQueue.isEmpty():
@@ -79,3 +79,5 @@ def SJF(processes):
     return executedProcesses
 ```
 
+## 3. Round-Robin
+## 4. Priority Scheduling

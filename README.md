@@ -19,7 +19,7 @@ This project aims to implement CPU scheduling with Python.
 
 # Implementation
 
-In this project, you will implement several CPU scheduling techniques and analyze the test results. We will use Python to implement the program and analyze the results.
+In this project, we will implement several CPU scheduling techniques and analyze the test results. We will use Python to implement the program and analyze the results.
 
 The scheduling algorithms I have chosen are
 

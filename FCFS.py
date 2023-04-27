@@ -46,6 +46,7 @@ def Draw_gantt_chart(processes):
         process = processes[i]
         gnt.broken_barh([(process.startTime, process.burstTime)], (i+0.1, 0.8))
 
+    gnt.set_title('Gantt Chart for FCFS')
     plt.show()
 
 

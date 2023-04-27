@@ -6,6 +6,9 @@ class Process:
         self.startTime = 0
         self.completionTime = 0
         self.waitTime = 0
+    
+    def __repr__(self):
+        return f"Process {self.name} (Arrival Time: {self.arrivalTime}, Burst Time: {self.burstTime}, Start Time: {self.startTime}, Completion Time: {self.completionTime})"
 
 class Queue:
     def __init__(self):
@@ -64,8 +67,12 @@ def main():
         totalWaitingTime += waitingTime
 
     averageWaitingTime = totalWaitingTime / len(executedProcesses)
-    print(executedProcesses)
-    print(f'Average Waiting Time: {averageWaitingTime}')
+    print("Executed Processes:")
+    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}".format("Name", "Arrival Time", "Burst Time", "Start Time", "Completion Time"))
+    for process in executedProcesses:
+        print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}".format(process.name, process.arrivalTime, process.burstTime, process.startTime, process.completionTime))
+    print(f"Average Waiting Time: {averageWaitingTime}")
 
 if __name__ == '__main__':
     main()
+    input("Press Enter key to exit...")

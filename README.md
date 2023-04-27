@@ -9,17 +9,17 @@
 
 # Overview
 
-This project aims to implement CPU scheduling with JavaScript.
+This project aims to implement CPU scheduling with Python.
 
 # Development Environment
 
-- Language: JavaScript (ES6)
-- Runtime: Node.js v14.17.0
+- Language: Python 
+- Runtime: Python 3.10.11
 - IDE: Visual Studio Code v1.56.2
 
 # Implementation
 
-In this project, we will implement several CPU scheduling techniques and analyze the test results. We will utilize Node.js within JavaScript to implement the program and analyze the results.
+In this project, you will implement several CPU scheduling techniques and analyze the test results. We will use Python to implement the program and analyze the results.
 
 The scheduling algorithms I have chosen are
 
@@ -28,8 +28,27 @@ The scheduling algorithms I have chosen are
 3. Round-Robin
 4. . . .
 
-```javascript
-function FCFS(parameter1, parameter2) {
-  // implementation code here
-}
-```
+```python
+def FCFS(processes):
+    readyQueue = Queue()
+    for process in processes:
+        readyQueue.enqueue(process)
+
+    executionQueue = Queue()
+
+    currentTime = 0
+    while not readyQueue.isEmpty():
+        process = readyQueue.dequeue()
+        while currentTime < process.arrivalTime:
+            currentTime += 1
+        executionQueue.enqueue(process)
+        process.startTime = currentTime
+        currentTime += process.burstTime
+        process.completionTime = currentTime
+
+    executedProcesses = []
+    while not executionQueue.isEmpty():
+        executedProcesses.append(executionQueue.dequeue())
+
+    return executedProcesses
+``` 

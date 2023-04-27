@@ -8,9 +8,10 @@ class Process:
         self.burstTime = burstTime
         self.startTime = 0
         self.completionTime = 0
+        self.waitTime = 0
 
     def __repr__(self):
-        return f"Process {self.name} (Arrival Time: {self.arrivalTime}, Burst Time: {self.burstTime}, Start Time: {self.startTime}, Completion Time: {self.completionTime})\ "
+        return f"Process {self.name} (Arrival Time: {self.arrivalTime}, Burst Time: {self.burstTime}, Start Time: {self.startTime}, Completion Time: {self.completionTime}, Wait Time: {self.waitTime})"
 
 
 
@@ -68,6 +69,7 @@ def FCFS(processes):
         process.startTime = currentTime
         currentTime += process.burstTime
         process.completionTime = currentTime
+        process.waitTime = process.startTime - process.arrivalTime
 
     executedProcesses = []
     while not executionQueue.isEmpty():
@@ -90,16 +92,17 @@ def main():
 
     totalWaitingTime = 0
     for process in executedProcesses:
-        waitingTime = process.startTime - process.arrivalTime
-        totalWaitingTime += waitingTime
+        totalWaitingTime += process.waitTime
 
     averageWaitingTime = totalWaitingTime / len(executedProcesses)
     print("Executed Processes:")
-    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}".format("Name", "Arrival Time", "Burst Time", "Start Time", "Completion Time"))
+    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}  {:<15}".format("Name", "Arrival Time", "Burst Time", "Start Time", "Completion Time", "Wait Time"))
     for process in executedProcesses:
-        print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}".format(process.name, process.arrivalTime, process.burstTime, process.startTime, process.completionTime))
+        print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}  {:<15}".format(process.name, process.arrivalTime, process.burstTime, process.startTime, process.completionTime, process.waitTime))
     print(f"Average Waiting Time: {averageWaitingTime}")
+
     Draw_gantt_chart(executedProcesses)
+
 
 
 if __name__ == "__main__":

@@ -9,9 +9,10 @@ class Process:
         self.startTime = 0
         self.completionTime = 0
         self.waitTime = 0
-    
+
     def __repr__(self):
-        return f"Process {self.name} (Arrival Time: {self.arrivalTime}, Burst Time: {self.burstTime}, Start Time: {self.startTime}, Completion Time: {self.completionTime})"
+        return f"Process {self.name} (Arrival Time: {self.arrivalTime}, Burst Time: {self.burstTime}, Start Time: {self.startTime}, Completion Time: {self.completionTime}, Wait Time: {self.waitTime})"
+
 
 class Queue:
     def __init__(self):
@@ -65,6 +66,7 @@ def SJF(processes):
         process.startTime = currentTime
         currentTime += process.burstTime
         process.completionTime = currentTime
+        process.waitTime = process.startTime - process.arrivalTime
 
     executedProcesses = []
     while not executionQueue.isEmpty():
@@ -75,29 +77,30 @@ def SJF(processes):
 
 
 def main():
-    num = int(input('Enter the number of processes: '))
+    num = int(input("Enter the number of processes: "))
 
     processes = []
     for i in range(num):
-        arrivalTime = int(input(f'Enter the arrival time of process P{i + 1}: '))
-        burstTime = int(input(f'Enter the burst time of process P{i + 1}: '))
-        process = Process(f'P{i + 1}', arrivalTime, burstTime)
+        arrivalTime = int(input(f"Enter the arrival time of process P{i + 1}: "))
+        burstTime = int(input(f"Enter the burst time of process P{i + 1}: "))
+        process = Process(f"P{i + 1}", arrivalTime, burstTime)
         processes.append(process)
 
     executedProcesses = SJF(processes)
 
     totalWaitingTime = 0
     for process in executedProcesses:
-        waitingTime = process.startTime - process.arrivalTime
-        totalWaitingTime += waitingTime
+        totalWaitingTime += process.waitTime
 
     averageWaitingTime = totalWaitingTime / len(executedProcesses)
     print("Executed Processes:")
-    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}".format("Name", "Arrival Time", "Burst Time", "Start Time", "Completion Time"))
+    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}  {:<15}".format("Name", "Arrival Time", "Burst Time", "Start Time", "Completion Time", "Wait Time"))
     for process in executedProcesses:
-        print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}".format(process.name, process.arrivalTime, process.burstTime, process.startTime, process.completionTime))
+        print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}  {:<15}".format(process.name, process.arrivalTime, process.burstTime, process.startTime, process.completionTime, process.waitTime))
     print(f"Average Waiting Time: {averageWaitingTime}")
+
     Draw_gantt_chart(executedProcesses)
+
 
 if __name__ == '__main__':
     main()

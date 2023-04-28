@@ -81,4 +81,41 @@ def SJF(processes):
 ```
 
 ## 3. Round-Robin
+```python
+def RoundRobin(processes, quantum):
+    readyQueue = Queue()
+    for process in processes:
+        readyQueue.enqueue(process)
+
+    executionQueue = Queue()
+    currentTime = 0
+    executedProcesses = []
+    while not readyQueue.isEmpty() or not executionQueue.isEmpty():
+        while not readyQueue.isEmpty() and readyQueue.items[0].arrivalTime <= currentTime:
+            executionQueue.enqueue(readyQueue.dequeue())
+
+        if executionQueue.isEmpty():
+            currentTime += 1
+            continue
+
+        process = executionQueue.dequeue()
+        if process.remainingTime > quantum:
+            process.preempted = True  
+            process.preemptedTime = quantum  
+            process.startTime = currentTime
+            process.remainingTime -= quantum
+            currentTime += quantum
+            readyQueue.enqueue(process)
+        else:
+            process.startTime = currentTime
+            currentTime += process.remainingTime
+            process.remainingTime = 0
+            process.completionTime = currentTime
+            process.turnAroundTime = process.completionTime - process.arrivalTime
+            process.waitTime = process.turnAroundTime - process.burstTime
+            executedProcesses.append(process)
+
+    executedProcesses.sort(key=lambda x: x.arrivalTime)
+    return executedProcesses
+```
 ## 4. Priority Scheduling

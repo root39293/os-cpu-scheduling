@@ -97,7 +97,7 @@ def main():
         print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format(process.name, process.arrivalTime, process.burstTime, process.completionTime, process.turnAroundTime, process.waitTime))
     print(f"Average TurnAround Time: {averageTurnAroundTime}")
     print(f"Average Waiting Time: {averageWaitingTime}")
-    ganttChart(executedProcesses)
+    #ganttChart(executedProcesses)
 
 if __name__ == '__main__':
     main()

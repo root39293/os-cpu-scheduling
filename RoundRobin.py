@@ -7,6 +7,7 @@ class Process:
         self.completionTime = 0
         self.waitTime = 0
         self.remainingTime = burstTime
+        self.turnAroundTime = 0
 
     def __repr__(self):
         return f"Process(name='{self.name}', arrivalTime={self.arrivalTime}, burstTime={self.burstTime})"
@@ -36,7 +37,6 @@ def RoundRobin(processes, quantum):
     executionQueue = Queue()
     currentTime = 0
     executedProcesses = []
-    readyQueue.items.sort(key=lambda x: x.burstTime)
     while not readyQueue.isEmpty() or not executionQueue.isEmpty():
         while not readyQueue.isEmpty() and readyQueue.items[0].arrivalTime <= currentTime:
             executionQueue.enqueue(readyQueue.dequeue())
@@ -50,15 +50,17 @@ def RoundRobin(processes, quantum):
             process.startTime = currentTime
             process.remainingTime -= quantum
             currentTime += quantum
-            executionQueue.enqueue(process)
+            readyQueue.enqueue(process)
         else:
             process.startTime = currentTime
             currentTime += process.remainingTime
             process.remainingTime = 0
             process.completionTime = currentTime
-            process.waitTime = process.completionTime - process.burstTime - process.arrivalTime
+            process.turnAroundTime = process.completionTime - process.arrivalTime
+            process.waitTime = process.turnAroundTime - process.burstTime
             executedProcesses.append(process)
 
+    executedProcesses.sort(key=lambda x: x.arrivalTime)
     return executedProcesses
 
 
@@ -72,16 +74,21 @@ def main():
         processes.append(process)
     timeSlice = int(input("Enter the number of quantum: "))
     executedProcesses = RoundRobin(processes,timeSlice)
-
+    
     totalWaitingTime = 0
+    totalTurnAroundTime = 0
     for process in executedProcesses:
         totalWaitingTime += process.waitTime
+        totalTurnAroundTime += process.turnAroundTime
 
+    averageTurnAroundTime = totalTurnAroundTime / len(executedProcesses)
     averageWaitingTime = totalWaitingTime / len(executedProcesses)
+
     print("Executed Processes:")
-    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}  {:<15}".format("Name", "Arrival Time", "Burst Time", "Start Time", "Completion Time", "Wait Time"))
+    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format("Name", "Arrival Time", "Burst Time", "Completion Time", "Turn Around Time","Wait Time" ))
     for process in executedProcesses:
-        print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}  {:<15}".format(process.name, process.arrivalTime, process.burstTime, process.startTime, process.completionTime, process.waitTime))
+        print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format(process.name, process.arrivalTime, process.burstTime, process.completionTime, process.turnAroundTime, process.waitTime))
+    print(f"Average TurnAround Time: {averageTurnAroundTime}")
     print(f"Average Waiting Time: {averageWaitingTime}")
 
 

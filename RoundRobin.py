@@ -1,6 +1,3 @@
-import sys
-import matplotlib.pyplot as plt
-
 class Process:
     def __init__(self, name, arrivalTime, burstTime):
         self.name = name
@@ -9,9 +6,11 @@ class Process:
         self.startTime = 0
         self.completionTime = 0
         self.waitTime = 0
+        self.remainingTime = burstTime
 
     def __repr__(self):
-        return f"Process {self.name} (Arrival Time: {self.arrivalTime}, Burst Time: {self.burstTime}, Start Time: {self.startTime}, Completion Time: {self.completionTime}, Wait Time: {self.waitTime})"
+        return f"Process(name='{self.name}', arrivalTime={self.arrivalTime}, burstTime={self.burstTime})"
+
 
 class Queue:
     def __init__(self):
@@ -29,62 +28,50 @@ class Queue:
         return len(self.items) == 0
 
 
-def Draw_gantt_chart(processes):
-    fig, gnt = plt.subplots()
-
-    gnt.set_xlabel('Time')
-    gnt.set_ylabel('Processes')
-
-    gnt.set_xlim(0, processes[-1].completionTime)
-    gnt.set_xticks([i for i in range(processes[-1].completionTime + 1)]) 
-    gnt.set_ylim(0, len(processes)+1)
-    gnt.set_yticks([i+0.5 for i in range(len(processes))])
-    gnt.set_yticklabels([processes[i].name for i in range(len(processes))])
-
-    for i in range(len(processes)):
-        process = processes[i]
-        gnt.broken_barh([(process.startTime, process.burstTime)], (i+0.1, 0.8))
-
-    gnt.set_title('Gantt Chart for FCFS')
-    plt.show()
-
-
-def FCFS(processes):
+def RoundRobin(processes, quantum):
     readyQueue = Queue()
     for process in processes:
         readyQueue.enqueue(process)
 
     executionQueue = Queue()
-
     currentTime = 0
-    while not readyQueue.isEmpty():
-        process = readyQueue.dequeue()
-        while currentTime < process.arrivalTime:
-            currentTime += 1
-        executionQueue.enqueue(process)
-        process.startTime = currentTime
-        currentTime += process.burstTime
-        process.completionTime = currentTime
-        process.waitTime = process.startTime - process.arrivalTime
-
     executedProcesses = []
-    while not executionQueue.isEmpty():
-        executedProcesses.append(executionQueue.dequeue())
+    readyQueue.items.sort(key=lambda x: x.burstTime)
+    while not readyQueue.isEmpty() or not executionQueue.isEmpty():
+        while not readyQueue.isEmpty() and readyQueue.items[0].arrivalTime <= currentTime:
+            executionQueue.enqueue(readyQueue.dequeue())
+
+        if executionQueue.isEmpty():
+            currentTime += 1
+            continue
+
+        process = executionQueue.dequeue()
+        if process.remainingTime > quantum:
+            process.startTime = currentTime
+            process.remainingTime -= quantum
+            currentTime += quantum
+            executionQueue.enqueue(process)
+        else:
+            process.startTime = currentTime
+            currentTime += process.remainingTime
+            process.remainingTime = 0
+            process.completionTime = currentTime
+            process.waitTime = process.completionTime - process.burstTime - process.arrivalTime
+            executedProcesses.append(process)
 
     return executedProcesses
 
 
 def main():
     num = int(input("Enter the number of processes: "))
-
     processes = []
     for i in range(num):
         arrivalTime = int(input(f"Enter the arrival time of process P{i + 1}: "))
         burstTime = int(input(f"Enter the burst time of process P{i + 1}: "))
         process = Process(f"P{i + 1}", arrivalTime, burstTime)
         processes.append(process)
-
-    executedProcesses = FCFS(processes)
+    timeSlice = int(input("Enter the number of quantum: "))
+    executedProcesses = RoundRobin(processes,timeSlice)
 
     totalWaitingTime = 0
     for process in executedProcesses:
@@ -97,12 +84,7 @@ def main():
         print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}  {:<15}".format(process.name, process.arrivalTime, process.burstTime, process.startTime, process.completionTime, process.waitTime))
     print(f"Average Waiting Time: {averageWaitingTime}")
 
-    Draw_gantt_chart(executedProcesses)
 
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
     input("Press Enter key to exit...")
-
-

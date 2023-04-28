@@ -1,4 +1,4 @@
-import sys
+
 import matplotlib.pyplot as plt
 
 class Process:
@@ -29,7 +29,7 @@ class Queue:
     def isEmpty(self):
         return len(self.items) == 0
 
-def Draw_gantt_chart(processes):
+def gantChart(processes):
     fig, gnt = plt.subplots()
 
     gnt.set_xlabel('Time')
@@ -99,7 +99,7 @@ def main():
         print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}  {:<15}".format(process.name, process.arrivalTime, process.burstTime, process.startTime, process.completionTime, process.waitTime))
     print(f"Average Waiting Time: {averageWaitingTime}")
 
-    Draw_gantt_chart(executedProcesses)
+    gantChart(executedProcesses)
 
 
 if __name__ == '__main__':

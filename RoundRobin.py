@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 class Process:
     def __init__(self, name, arrivalTime, burstTime):
         self.name = name
@@ -8,6 +10,8 @@ class Process:
         self.waitTime = 0
         self.remainingTime = burstTime
         self.turnAroundTime = 0
+        self.preempted = False  
+        self.preemptedTime = 0
 
     def __repr__(self):
         return f"Process(name='{self.name}', arrivalTime={self.arrivalTime}, burstTime={self.burstTime})"
@@ -47,6 +51,8 @@ def RoundRobin(processes, quantum):
 
         process = executionQueue.dequeue()
         if process.remainingTime > quantum:
+            process.preempted = True  
+            process.preemptedTime = quantum  
             process.startTime = currentTime
             process.remainingTime -= quantum
             currentTime += quantum
@@ -62,6 +68,7 @@ def RoundRobin(processes, quantum):
 
     executedProcesses.sort(key=lambda x: x.arrivalTime)
     return executedProcesses
+
 
 
 def main():
@@ -85,13 +92,16 @@ def main():
     averageWaitingTime = totalWaitingTime / len(executedProcesses)
 
     print("Executed Processes:")
-    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format("Name", "Arrival Time", "Burst Time", "Completion Time", "Turn Around Time","Wait Time" ))
+    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format("Name", "Arrival Time", "Burst Time", "Completion Time", "TurnAround Time", "Wait Time" ))
     for process in executedProcesses:
         print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format(process.name, process.arrivalTime, process.burstTime, process.completionTime, process.turnAroundTime, process.waitTime))
     print(f"Average TurnAround Time: {averageTurnAroundTime}")
     print(f"Average Waiting Time: {averageWaitingTime}")
-
+    ganttChart(executedProcesses)
 
 if __name__ == '__main__':
     main()
     input("Press Enter key to exit...")
+
+
+

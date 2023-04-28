@@ -77,6 +77,7 @@ def SJF(processes):
         executedProcesses.append(executionQueue.dequeue())
 
     return executedProcesses
+
 ```
 
 ## 3. Round-Robin

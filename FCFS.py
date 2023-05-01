@@ -36,7 +36,7 @@ def gantChart(processes):
     gnt.set_ylabel('Processes')
 
     gnt.set_xlim(0, processes[-1].completionTime)
-    gnt.set_xticks([i for i in range(processes[-1].completionTime + 1)]) 
+    gnt.set_xticks([i for i in range(0, processes[-1].completionTime + 1, 2)])
     gnt.set_ylim(0, len(processes)+1)
     gnt.set_yticks([i+0.5 for i in range(len(processes))])
     gnt.set_yticklabels([processes[i].name for i in range(len(processes))])

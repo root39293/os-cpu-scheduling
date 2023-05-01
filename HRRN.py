@@ -1,4 +1,3 @@
-
 import matplotlib.pyplot as plt
 
 class Process:
@@ -9,11 +8,12 @@ class Process:
         self.startTime = 0
         self.completionTime = 0
         self.waitTime = 0
+        self.remainingTime = burstTime
+        self.turnAroundTime = 0
 
     def __repr__(self):
-        return f"Process {self.name} (Arrival Time: {self.arrivalTime}, Burst Time: {self.burstTime}, Start Time: {self.startTime}, Completion Time: {self.completionTime}, Wait Time: {self.waitTime})"
-
-
+        return f"Process(name='{self.name}', arrivalTime={self.arrivalTime}, burstTime={self.burstTime})"
+    
 class Queue:
     def __init__(self):
         self.items = []
@@ -28,6 +28,7 @@ class Queue:
 
     def isEmpty(self):
         return len(self.items) == 0
+    
 
 def gantChart(processes):
     fig, gnt = plt.subplots()
@@ -45,35 +46,49 @@ def gantChart(processes):
         process = processes[i]
         gnt.broken_barh([(process.startTime, process.burstTime)], (i+0.1, 0.8))
 
-    gnt.set_title('Gantt Chart for SJF')
+    gnt.set_title('Gantt Chart for HRRN')
     plt.show()
 
 
-def SJF(processes):
+def HRRN(processes):
     readyQueue = Queue()
+    executionQueue = Queue()
+    ratioQueue = Queue()
+    currentTime = 0
+
     for process in processes:
         readyQueue.enqueue(process)
 
-    executionQueue = Queue()
-
-    currentTime = 0
     while not readyQueue.isEmpty():
-        readyQueue.items.sort(key=lambda x: x.burstTime)
-        process = readyQueue.dequeue()
-        while currentTime < process.arrivalTime:
-            currentTime += 1
-        executionQueue.enqueue(process)
-        process.startTime = currentTime
-        currentTime += process.burstTime
-        process.completionTime = currentTime
-        process.waitTime = process.startTime - process.arrivalTime
+        hrrnProcess = None
+        hrrnValue = -1
+        for process in readyQueue.items:
+            responseRatio = (currentTime - process.arrivalTime + process.burstTime) / process.burstTime
+            if responseRatio > hrrnValue:
+                hrrnValue = responseRatio
+                hrrnProcess = process
+
+        readyQueue.items.remove(hrrnProcess)
+        executionQueue.enqueue(hrrnProcess)
+
+        if currentTime < hrrnProcess.arrivalTime:
+            currentTime = hrrnProcess.arrivalTime
+
+        hrrnProcess.startTime = currentTime
+        currentTime += hrrnProcess.burstTime
+        hrrnProcess.completionTime = currentTime
+        hrrnProcess.turnAroundTime = hrrnProcess.completionTime - hrrnProcess.arrivalTime
+        hrrnProcess.waitTime = hrrnProcess.turnAroundTime - hrrnProcess.burstTime
+
+        ratioQueue.enqueue(hrrnProcess)
+        executionQueue.dequeue()
 
     executedProcesses = []
-    while not executionQueue.isEmpty():
-        executedProcesses.append(executionQueue.dequeue())
+    while not ratioQueue.isEmpty():
+        executedProcesses.append(ratioQueue.dequeue())
 
+    executedProcesses.sort(key=lambda x: x.arrivalTime)
     return executedProcesses
-
 
 
 def main():
@@ -86,22 +101,27 @@ def main():
         process = Process(f"P{i + 1}", arrivalTime, burstTime)
         processes.append(process)
 
-    executedProcesses = SJF(processes)
+    executedProcesses = HRRN(processes)
 
     totalWaitingTime = 0
+    totalTurnAroundTime = 0
     for process in executedProcesses:
         totalWaitingTime += process.waitTime
+        totalTurnAroundTime += process.turnAroundTime
 
+    averageTurnAroundTime = totalTurnAroundTime / len(executedProcesses)
     averageWaitingTime = totalWaitingTime / len(executedProcesses)
-    print("Executed Processes:")
-    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}  {:<15}".format("Name", "Arrival Time", "Burst Time", "Start Time", "Completion Time", "Wait Time"))
-    for process in executedProcesses:
-        print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}  {:<15}".format(process.name, process.arrivalTime, process.burstTime, process.startTime, process.completionTime, process.waitTime))
-    print(f"Average Waiting Time: {averageWaitingTime}")
 
+    print("Executed Processes:")
+    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format("Name", "Arrival Time", "Burst Time", "Completion Time", "TurnAround Time", "Wait Time" ))
+    for process in executedProcesses:
+        print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format(process.name, process.arrivalTime, process.burstTime, process.completionTime, process.turnAroundTime, process.waitTime))
+    print(f"Average TurnAround Time: {averageTurnAroundTime}")
+    print(f"Average Waiting Time: {averageWaitingTime}")
     gantChart(executedProcesses)
 
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
     input("Press Enter key to exit...")

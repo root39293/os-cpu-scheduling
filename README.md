@@ -50,7 +50,8 @@ def FCFS(processes):
 
     return executedProcesses
 ``` 
-## 2. Shortest Job first (Non-preemptive)
+
+## 2. Shortest Job First (Non-preemptive)
 
 ```python
 def SJF(processes):
@@ -118,4 +119,46 @@ def RoundRobin(processes, quantum):
     executedProcesses.sort(key=lambda x: x.arrivalTime)
     return executedProcesses
 ```
-## 4. Priority Scheduling
+## 4. Highest response ratio next(HRRN)
+
+```python
+def HRRN(processes):
+    readyQueue = Queue()
+    executionQueue = Queue()
+    ratioQueue = Queue()
+    currentTime = 0
+
+    for process in processes:
+        readyQueue.enqueue(process)
+
+    while not readyQueue.isEmpty():
+        hrrnProcess = None
+        hrrnValue = -1
+        for process in readyQueue.items:
+            responseRatio = (currentTime - process.arrivalTime + process.burstTime) / process.burstTime
+            if responseRatio > hrrnValue:
+                hrrnValue = responseRatio
+                hrrnProcess = process
+
+        readyQueue.items.remove(hrrnProcess)
+        executionQueue.enqueue(hrrnProcess)
+
+        if currentTime < hrrnProcess.arrivalTime:
+            currentTime = hrrnProcess.arrivalTime
+
+        hrrnProcess.startTime = currentTime
+        currentTime += hrrnProcess.burstTime
+        hrrnProcess.completionTime = currentTime
+        hrrnProcess.turnAroundTime = hrrnProcess.completionTime - hrrnProcess.arrivalTime
+        hrrnProcess.waitTime = hrrnProcess.turnAroundTime - hrrnProcess.burstTime
+
+        ratioQueue.enqueue(hrrnProcess)
+        executionQueue.dequeue()
+
+    executedProcesses = []
+    while not ratioQueue.isEmpty():
+        executedProcesses.append(ratioQueue.dequeue())
+
+    executedProcesses.sort(key=lambda x: x.arrivalTime)
+    return executedProcesses
+```

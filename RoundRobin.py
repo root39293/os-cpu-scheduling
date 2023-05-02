@@ -102,10 +102,7 @@ def ganttChart(processes, timeSlice):
 
     ax.set_yticks(yticks)
     ax.set_yticklabels(ytick_labels)
-    
-
-    ax.xaxis.set_major_locator(MultipleLocator(2))
-    
+    ax.xaxis.set_major_locator(MultipleLocator(timeSlice))
     ax.grid(True)
     plt.title("Gantt Chart for Round Robin")
     plt.show()

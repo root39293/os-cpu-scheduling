@@ -29,27 +29,6 @@ class Queue:
     def isEmpty(self):
         return len(self.items) == 0
     
-
-def gantChart(processes):
-    fig, gnt = plt.subplots()
-
-    gnt.set_xlabel('Time')
-    gnt.set_ylabel('Processes')
-
-    gnt.set_xlim(0, processes[-1].completionTime)
-    gnt.set_xticks([i for i in range(0, processes[-1].completionTime + 1, 2)])
-    gnt.set_ylim(0, len(processes)+1)
-    gnt.set_yticks([i+0.5 for i in range(len(processes))])
-    gnt.set_yticklabels([processes[i].name for i in range(len(processes))])
-
-    for i in range(len(processes)):
-        process = processes[i]
-        gnt.broken_barh([(process.startTime, process.burstTime)], (i+0.1, 0.8))
-
-    gnt.set_title('Gantt Chart for HRRN')
-    plt.show()
-
-
 def HRRN(processes):
     readyQueue = Queue()
     executionQueue = Queue()
@@ -118,7 +97,7 @@ def main():
         print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format(process.name, process.arrivalTime, process.burstTime, process.completionTime, process.turnAroundTime, process.waitTime))
     print(f"Average TurnAround Time: {averageTurnAroundTime}")
     print(f"Average Waiting Time: {averageWaitingTime}")
-    gantChart(executedProcesses)
+    #ganttChart(executedProcesses)
 
 
 

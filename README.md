@@ -31,6 +31,7 @@ def FCFS(processes):
     for process in processes:
         readyQueue.enqueue(process)
 
+    readyQueue.items.sort(key=lambda x: x.arrivalTime)
     executionQueue = Queue()
 
     currentTime = 0
@@ -78,12 +79,11 @@ def SJF(processes):
         executedProcesses.append(executionQueue.dequeue())
 
     return executedProcesses
-
 ```
 
 ## 3. Round-Robin
 ```python
-def RoundRobin(processes, quantum):
+def RoundRobin(processes, timeSlice):
     readyQueue = Queue()
     for process in processes:
         readyQueue.enqueue(process)
@@ -100,15 +100,15 @@ def RoundRobin(processes, quantum):
             continue
 
         process = executionQueue.dequeue()
-        if process.remainingTime > quantum:
-            process.preempted = True  
-            process.preemptedTime = quantum  
-            process.startTime = currentTime
-            process.remainingTime -= quantum
-            currentTime += quantum
+        if process.remainingTime > timeSlice:
+            process.preempted = True
+            process.preemptedTime = timeSlice
+            process.startTime.append(currentTime)
+            process.remainingTime -= timeSlice
+            currentTime += timeSlice
             readyQueue.enqueue(process)
         else:
-            process.startTime = currentTime
+            process.startTime.append(currentTime)
             currentTime += process.remainingTime
             process.remainingTime = 0
             process.completionTime = currentTime

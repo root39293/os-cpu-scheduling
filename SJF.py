@@ -29,7 +29,7 @@ class Queue:
     def isEmpty(self):
         return len(self.items) == 0
 
-def gantChart(processes):
+def ganttChart(processes):
     fig, ax = plt.subplots()
 
     ax.set_xlabel('Time')
@@ -46,6 +46,7 @@ def gantChart(processes):
         ax.broken_barh([(process.startTime, process.burstTime)], (i+0.1, 0.8))
 
     ax.set_title('Gantt Chart for SJF')
+    ax.grid(True)
     plt.show()
 
 
@@ -99,7 +100,7 @@ def main():
         print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15}  {:<15}".format(process.name, process.arrivalTime, process.burstTime, process.startTime, process.completionTime, process.waitTime))
     print(f"Average Waiting Time: {averageWaitingTime}")
 
-    gantChart(executedProcesses)
+    ganttChart(executedProcesses)
 
 
 if __name__ == '__main__':

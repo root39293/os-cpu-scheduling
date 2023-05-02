@@ -95,7 +95,7 @@ def ganttChart(processes, timeSlice):
             
        
             if start_time >= process.arrivalTime:
-                ax.broken_barh([(start_time, end_time - start_time)], (y_pos-0.4, 0.8), facecolors='blue')
+                ax.broken_barh([(start_time, end_time - start_time)], (y_pos-0.4, 0.8))
         
     yticks = list(range(len(process_positions)))
     ytick_labels = sorted(process_positions, key=process_positions.get)

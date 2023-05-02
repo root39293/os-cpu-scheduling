@@ -30,22 +30,23 @@ class Queue:
 
 
 def gantChart(processes):
-    fig, gnt = plt.subplots()
+    fig, ax = plt.subplots()
 
-    gnt.set_xlabel('Time')
-    gnt.set_ylabel('Processes')
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Processes')
 
-    gnt.set_xlim(0, processes[-1].completionTime)
-    gnt.set_xticks([i for i in range(0, processes[-1].completionTime + 1, 2)])
-    gnt.set_ylim(0, len(processes)+1)
-    gnt.set_yticks([i+0.5 for i in range(len(processes))])
-    gnt.set_yticklabels([processes[i].name for i in range(len(processes))])
+    ax.set_xlim(0, processes[-1].completionTime)
+    ax.set_xticks([i for i in range(0, processes[-1].completionTime + 1, 2)])
+    ax.set_ylim(0, len(processes)+1)
+    ax.set_yticks([i+0.5 for i in range(len(processes))])
+    ax.set_yticklabels([processes[i].name for i in range(len(processes))])
 
     for i in range(len(processes)):
         process = processes[i]
-        gnt.broken_barh([(process.startTime, process.burstTime)], (i+0.1, 0.8))
+        ax.broken_barh([(process.startTime, process.burstTime)], (i+0.1, 0.8))
 
-    gnt.set_title('Gantt Chart for FCFS')
+    ax.set_title('Gantt Chart for FCFS')
+    ax.grid(True)
     plt.show()
 
 
@@ -54,6 +55,7 @@ def FCFS(processes):
     for process in processes:
         readyQueue.enqueue(process)
 
+    readyQueue.items.sort(key=lambda x: x.arrivalTime)
     executionQueue = Queue()
 
     currentTime = 0

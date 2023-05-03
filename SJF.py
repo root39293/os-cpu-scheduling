@@ -1,5 +1,5 @@
-
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
 
 class Process:
     def __init__(self, name, arrivalTime, burstTime):

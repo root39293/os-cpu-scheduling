@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
 
 class Process:
     def __init__(self, name, arrivalTime, burstTime):
@@ -28,6 +29,38 @@ class Queue:
 
     def isEmpty(self):
         return len(self.items) == 0
+    
+
+def ganttChart(processes):
+    fig, ax = plt.subplots()
+    ax.set_xlabel("Time")
+    ax.set_ylabel("Processes")
+    yticks = []
+    ytick_labels = []
+
+    process_positions = {}
+
+    for process in processes:
+        if process.name not in process_positions:
+            process_positions[process.name] = len(process_positions)
+
+        y_pos = process_positions[process.name]
+        start_time = process.startTime
+        end_time = process.completionTime
+
+        if start_time >= process.arrivalTime:
+            ax.broken_barh([(start_time, end_time - start_time)], (y_pos-0.4, 0.8))
+
+    yticks = list(range(len(process_positions)))
+    ytick_labels = sorted(process_positions, key=process_positions.get)
+
+    ax.set_yticks(yticks)
+    ax.set_yticklabels(ytick_labels)
+    ax.xaxis.set_major_locator(MultipleLocator(2))
+    ax.grid(True)
+    plt.title("Gantt Chart for HRRN")
+    plt.show()
+
     
 def HRRN(processes):
     readyQueue = Queue()
@@ -97,7 +130,7 @@ def main():
         print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format(process.name, process.arrivalTime, process.burstTime, process.completionTime, process.turnAroundTime, process.waitTime))
     print(f"Average TurnAround Time: {averageTurnAroundTime}")
     print(f"Average Waiting Time: {averageWaitingTime}")
-    #ganttChart(executedProcesses)
+    ganttChart(executedProcesses)
 
 
 

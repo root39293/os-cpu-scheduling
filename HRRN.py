@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
+
 class Process:
     def __init__(self, name, arrivalTime, burstTime):
         self.name = name
@@ -14,7 +15,8 @@ class Process:
 
     def __repr__(self):
         return f"Process(name='{self.name}', arrivalTime={self.arrivalTime}, burstTime={self.burstTime})"
-    
+
+
 class Queue:
     def __init__(self):
         self.items = []
@@ -29,7 +31,7 @@ class Queue:
 
     def isEmpty(self):
         return len(self.items) == 0
-    
+
 
 def ganttChart(processes):
     fig, ax = plt.subplots()
@@ -49,7 +51,7 @@ def ganttChart(processes):
         end_time = process.completionTime
 
         if start_time >= process.arrivalTime:
-            ax.broken_barh([(start_time, end_time - start_time)], (y_pos-0.4, 0.8))
+            ax.broken_barh([(start_time, end_time - start_time)], (y_pos - 0.4, 0.8))
 
     yticks = list(range(len(process_positions)))
     ytick_labels = sorted(process_positions, key=process_positions.get)
@@ -61,7 +63,7 @@ def ganttChart(processes):
     plt.title("Gantt Chart for HRRN")
     plt.show()
 
-    
+
 def HRRN(processes):
     readyQueue = Queue()
     executionQueue = Queue()
@@ -75,7 +77,9 @@ def HRRN(processes):
         hrrnProcess = None
         hrrnValue = -1
         for process in readyQueue.items:
-            responseRatio = (currentTime - process.arrivalTime + process.burstTime) / process.burstTime
+            responseRatio = (
+                currentTime - process.arrivalTime + process.burstTime
+            ) / process.burstTime
             if responseRatio > hrrnValue:
                 hrrnValue = responseRatio
                 hrrnProcess = process
@@ -89,7 +93,9 @@ def HRRN(processes):
         hrrnProcess.startTime = currentTime
         currentTime += hrrnProcess.burstTime
         hrrnProcess.completionTime = currentTime
-        hrrnProcess.turnAroundTime = hrrnProcess.completionTime - hrrnProcess.arrivalTime
+        hrrnProcess.turnAroundTime = (
+            hrrnProcess.completionTime - hrrnProcess.arrivalTime
+        )
         hrrnProcess.waitTime = hrrnProcess.turnAroundTime - hrrnProcess.burstTime
 
         ratioQueue.enqueue(hrrnProcess)
@@ -125,13 +131,30 @@ def main():
     averageWaitingTime = totalWaitingTime / len(executedProcesses)
 
     print("Executed Processes:")
-    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format("Name", "Arrival Time", "Burst Time", "Completion Time", "TurnAround Time", "Wait Time" ))
+    print(
+        "{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format(
+            "Name",
+            "Arrival Time",
+            "Burst Time",
+            "Completion Time",
+            "TurnAround Time",
+            "Wait Time",
+        )
+    )
     for process in executedProcesses:
-        print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format(process.name, process.arrivalTime, process.burstTime, process.completionTime, process.turnAroundTime, process.waitTime))
+        print(
+            "{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format(
+                process.name,
+                process.arrivalTime,
+                process.burstTime,
+                process.completionTime,
+                process.turnAroundTime,
+                process.waitTime,
+            )
+        )
     print(f"Average TurnAround Time: {averageTurnAroundTime}")
     print(f"Average Waiting Time: {averageWaitingTime}")
     ganttChart(executedProcesses)
-
 
 
 if __name__ == "__main__":

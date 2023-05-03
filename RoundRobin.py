@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
+
 class Process:
     def __init__(self, name, arrivalTime, burstTime):
         self.name = name
@@ -11,7 +12,7 @@ class Process:
         self.waitTime = 0
         self.remainingTime = burstTime
         self.turnAroundTime = 0
-        self.preempted = False  
+        self.preempted = False
         self.preemptedTime = 0
 
     def __repr__(self):
@@ -34,7 +35,6 @@ class Queue:
         return len(self.items) == 0
 
 
-
 def RoundRobin(processes, timeSlice):
     readyQueue = Queue()
     for process in processes:
@@ -44,7 +44,9 @@ def RoundRobin(processes, timeSlice):
     currentTime = 0
     executedProcesses = []
     while not readyQueue.isEmpty() or not executionQueue.isEmpty():
-        while not readyQueue.isEmpty() and readyQueue.items[0].arrivalTime <= currentTime:
+        while (
+            not readyQueue.isEmpty() and readyQueue.items[0].arrivalTime <= currentTime
+        ):
             executionQueue.enqueue(readyQueue.dequeue())
 
         if executionQueue.isEmpty():
@@ -72,7 +74,6 @@ def RoundRobin(processes, timeSlice):
     return executedProcesses
 
 
-
 def ganttChart(processes, timeSlice):
     fig, ax = plt.subplots()
     ax.set_xlabel("Time")
@@ -85,18 +86,19 @@ def ganttChart(processes, timeSlice):
     for process in processes:
         if process.name not in process_positions:
             process_positions[process.name] = len(process_positions)
-        
+
         y_pos = process_positions[process.name]
         for idx, start_time in enumerate(process.startTime):
             if process.preempted and idx < len(process.startTime) - 1:
                 end_time = start_time + timeSlice
             else:
                 end_time = process.completionTime
-            
-       
+
             if start_time >= process.arrivalTime:
-                ax.broken_barh([(start_time, end_time - start_time)], (y_pos-0.4, 0.8))
-        
+                ax.broken_barh(
+                    [(start_time, end_time - start_time)], (y_pos - 0.4, 0.8)
+                )
+
     yticks = list(range(len(process_positions)))
     ytick_labels = sorted(process_positions, key=process_positions.get)
 
@@ -108,12 +110,6 @@ def ganttChart(processes, timeSlice):
     plt.show()
 
 
-
-
-
-
-
-
 def main():
     num = int(input("Enter the number of processes: "))
     processes = []
@@ -123,8 +119,8 @@ def main():
         process = Process(f"P{i + 1}", arrivalTime, burstTime)
         processes.append(process)
     timeSlice = int(input("Enter the number of timeSlice: "))
-    executedProcesses = RoundRobin(processes,timeSlice)
-    
+    executedProcesses = RoundRobin(processes, timeSlice)
+
     totalWaitingTime = 0
     totalTurnAroundTime = 0
     for process in executedProcesses:
@@ -135,16 +131,32 @@ def main():
     averageWaitingTime = totalWaitingTime / len(executedProcesses)
 
     print("Executed Processes:")
-    print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format("Name", "Arrival Time", "Burst Time", "Completion Time", "TurnAround Time", "Wait Time" ))
+    print(
+        "{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format(
+            "Name",
+            "Arrival Time",
+            "Burst Time",
+            "Completion Time",
+            "TurnAround Time",
+            "Wait Time",
+        )
+    )
     for process in executedProcesses:
-        print("{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format(process.name, process.arrivalTime, process.burstTime, process.completionTime, process.turnAroundTime, process.waitTime))
+        print(
+            "{:<10}  {:<15}  {:<15}  {:<15}  {:<15} {:<15}  ".format(
+                process.name,
+                process.arrivalTime,
+                process.burstTime,
+                process.completionTime,
+                process.turnAroundTime,
+                process.waitTime,
+            )
+        )
     print(f"Average TurnAround Time: {averageTurnAroundTime}")
     print(f"Average Waiting Time: {averageWaitingTime}")
     ganttChart(executedProcesses, timeSlice)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
     input("Press Enter key to exit...")
-
-
-

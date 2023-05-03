@@ -16,12 +16,13 @@ This project aims to implement CPU scheduling with Python.
 - Language: Python 
 - Runtime: Python 3.10.11
 - IDE: Visual Studio Code v1.56.2
+- Required packages: matplotlib
 
 # Implementation
 
 In this project, we will implement several CPU scheduling techniques and analyze the test results. We will use Python to implement the program and analyze the results.
 
-The scheduling algorithms I have chosen are
+The scheduling algorithms I have chosen are FCFS, SJF, Round Robin, HRRN
 
 
 ## 1. FCFS (First-Come First-Served)
@@ -92,7 +93,9 @@ def RoundRobin(processes, timeSlice):
     currentTime = 0
     executedProcesses = []
     while not readyQueue.isEmpty() or not executionQueue.isEmpty():
-        while not readyQueue.isEmpty() and readyQueue.items[0].arrivalTime <= currentTime:
+        while (
+            not readyQueue.isEmpty() and readyQueue.items[0].arrivalTime <= currentTime
+        ):
             executionQueue.enqueue(readyQueue.dequeue())
 
         if executionQueue.isEmpty():
@@ -118,6 +121,7 @@ def RoundRobin(processes, timeSlice):
 
     executedProcesses.sort(key=lambda x: x.arrivalTime)
     return executedProcesses
+
 ```
 ## 4. Highest response ratio next(HRRN)
 
@@ -135,7 +139,9 @@ def HRRN(processes):
         hrrnProcess = None
         hrrnValue = -1
         for process in readyQueue.items:
-            responseRatio = (currentTime - process.arrivalTime + process.burstTime) / process.burstTime
+            responseRatio = (
+                currentTime - process.arrivalTime + process.burstTime
+            ) / process.burstTime
             if responseRatio > hrrnValue:
                 hrrnValue = responseRatio
                 hrrnProcess = process
@@ -149,7 +155,9 @@ def HRRN(processes):
         hrrnProcess.startTime = currentTime
         currentTime += hrrnProcess.burstTime
         hrrnProcess.completionTime = currentTime
-        hrrnProcess.turnAroundTime = hrrnProcess.completionTime - hrrnProcess.arrivalTime
+        hrrnProcess.turnAroundTime = (
+            hrrnProcess.completionTime - hrrnProcess.arrivalTime
+        )
         hrrnProcess.waitTime = hrrnProcess.turnAroundTime - hrrnProcess.burstTime
 
         ratioQueue.enqueue(hrrnProcess)
@@ -161,4 +169,18 @@ def HRRN(processes):
 
     executedProcesses.sort(key=lambda x: x.arrivalTime)
     return executedProcesses
+```
+
+# Usage
+
+1. Using bash
+```bash
+git clone https://github.com/root39293/os-cpu-scheduling
+cd os-cpu-scheduling
+pip install matplotlib
+```
+
+2. Run the exe file
+```
+Download and unzip the attached archive and run the corresponding .exe file for each algorithm
 ```

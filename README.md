@@ -180,7 +180,14 @@ cd os-cpu-scheduling
 pip install matplotlib
 ```
 
+
 2. Run the exe file
-```
-Download and unzip the attached archive and run the corresponding .exe file for each algorithm
-```
+[Download](https://drive.google.com/file/d/1MMXrN-7X3O3CHgoEyyrSuZWcqw-n-KXG/view?usp=share_link) and unzip the attached archive and run the corresponding .exe file for each algorithm
+
+
+# Screenshot
+
+![image01](https://user-images.githubusercontent.com/72300594/236681670-35f19965-93d2-4dc1-ad88-81f5868fcb68.png)
+![image02](https://user-images.githubusercontent.com/72300594/236681671-bd02a40a-7be2-4b00-a8a5-432a3f2e6808.png)
+![image03](https://user-images.githubusercontent.com/72300594/236681672-1f43a93b-b0a2-4de9-8952-13facaf1a42b.png)
+![image04](https://user-images.githubusercontent.com/72300594/236681674-c724d898-6a70-4b8e-8be4-493ed409a9ce.png)

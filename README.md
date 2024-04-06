@@ -172,17 +172,13 @@ def HRRN(processes):
 ```
 
 # Usage
-
-1. Using bash
+ 
+Using bash
 ```bash
 git clone https://github.com/root39293/os-cpu-scheduling
 cd os-cpu-scheduling
 pip install matplotlib
 ```
-
-
-2. Run the exe file
-[Download](https://drive.google.com/file/d/1MMXrN-7X3O3CHgoEyyrSuZWcqw-n-KXG/view?usp=share_link) and unzip the attached archive and run the corresponding .exe file for each algorithm
 
 
 # Screenshot
